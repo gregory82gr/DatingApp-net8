@@ -4,12 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
 using API.Data;
-using API;
-using Microsoft.EntityFrameworkCore;
 using API.DTOs;
-using API.Interfaces;
 using System.Text.Json;
-using System.Collections.Generic;
+
 
 namespace API.Data{
 
