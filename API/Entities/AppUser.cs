@@ -21,10 +21,10 @@ namespace API.Entities{
         public string Country { get; set; }  
         public List<Photo> Photos { get; set; } =[];  
 
-        public int GetAge()
-        {
-            return DateOfBirth.CalculateAge();
-        } 
+        // public int GetAge()
+        // {
+        //     return DateOfBirth.CalculateAge();
+        // } 
     }
 
 }

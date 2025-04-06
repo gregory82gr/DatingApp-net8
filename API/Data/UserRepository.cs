@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using API.Interfaces;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using API.DTOs;
 namespace API.Data;
 
 
-public class UserRepository(DataContext _context) : IUserRepository
+public class UserRepository(DataContext _context,IMapper mapper) : IUserRepository
 {
     public void Update(AppUser user)
     {
@@ -36,5 +38,18 @@ public class UserRepository(DataContext _context) : IUserRepository
         return await _context.Users
         .Include(x=>x.Photos).
         ToListAsync();
+    }
+    public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+    {
+        return await _context.Users
+            .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
+            .ToListAsync();
+    }
+    public async Task<MemberDto?> GetMemberAsync(string username)
+    {
+        return await _context.Users
+            .Where(x => x.UserName == username)
+            .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
+            .SingleOrDefaultAsync();
     }
 }
