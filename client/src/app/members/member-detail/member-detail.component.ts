@@ -12,13 +12,13 @@ import { Member } from '../../_models/member';
 export class MemberDetailComponent implements OnInit {
  private memberService=inject(MembersService);
  private route=inject(ActivatedRoute);
- member?: Member | undefined;
+ member?: Member ;
 
   ngOnInit(): void {
     this.loadMember();
   }
 
- 
+
 
   loadMember() {
     const username = this.route.snapshot.paramMap.get('username');
