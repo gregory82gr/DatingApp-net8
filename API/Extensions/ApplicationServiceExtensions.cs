@@ -2,6 +2,8 @@
 using API.Interfaces;
 using API.Sevices;
 using Microsoft.EntityFrameworkCore;
+using API.Helpers;
+using Microsoft.Extensions.Configuration;
 
 namespace API.Extensions
 {
@@ -22,6 +24,7 @@ namespace API.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             
 
             return services;
