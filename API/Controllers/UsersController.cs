@@ -61,7 +61,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
             var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (username == null) return BadRequest("No usernamer found in token");
-            
+
             var user = await userRepository.GetUserByUsernameAsync(username);
 
             if (user == null) return NotFound("Could not find user");
@@ -82,11 +82,37 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
 
             if (await userRepository.SaveAllAsync())
             {
-                  return  CreatedAtAction(nameof(GetUser),
+                  return CreatedAtAction(nameof(GetUser),
                          new { username = user.UserName }, mapper.Map<PhotoDto>(photo));
             }
 
             return BadRequest("Problem adding photo");
+      }
+
+      [HttpPut("set-main-photo/{photoId:int}")]
+      public async Task<ActionResult> SetMainPhoto(int photoId)
+      {
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (username == null) return BadRequest("No usernamer found in token");
+
+            var user = await userRepository.GetUserByUsernameAsync(username);
+
+            if (user == null) return NotFound("Could not find user");
+
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            if (photo == null || photo.IsMain) return BadRequest("Cannot use this as  main photo");
+
+            var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
+
+            if (currentMain != null) currentMain.IsMain = false;
+
+            photo.IsMain = true;
+
+            if (await userRepository.SaveAllAsync()) return NoContent();
+
+            return BadRequest("Problem setting main photo");
       }
 
 
