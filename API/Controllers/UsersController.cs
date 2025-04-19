@@ -8,6 +8,15 @@ using AutoMapper;
 using System.Security.Claims;
 using API.Interfaces;
 using API.Sevices;
+using API.Helpers;
+using API.Extensions;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Text.Json;
+
 
 namespace API.Controllers;
 
@@ -17,13 +26,15 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
 {
 
       [HttpGet]
-      public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+      public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
       {
-            var users = await userRepository.GetMembersAsync();
+            var users = await userRepository.GetMembersAsync(userParams);
 
+            Response.AddPagination(users);
 
             return Ok(users);
       }
+      
 
 
       [HttpGet("{username}")]

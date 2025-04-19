@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using API.DTOs;
+using API.Helpers;
+using API.Extensions;
 namespace API.Data;
 
 
@@ -39,11 +41,14 @@ public class UserRepository(DataContext _context,IMapper mapper) : IUserReposito
         .Include(x=>x.Photos).
         ToListAsync();
     }
-    public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+    public async Task<PagedList<MemberDto>> GetMembersAsync( UserParams userParams)
     {
-        return await _context.Users
-            .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
-            .ToListAsync();
+      
+        var query= _context.Users
+            .ProjectTo<MemberDto>(mapper.ConfigurationProvider);
+        
+        return await PagedList<MemberDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
+            
     }
     public async Task<MemberDto?> GetMemberAsync(string username)
     {
