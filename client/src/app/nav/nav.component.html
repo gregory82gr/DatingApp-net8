@@ -31,7 +31,7 @@
         >
 
         <a dropdownToggle class="dropodown-toogle text-light text-decoration-none" >
-           Welcome {{accountService.currentUser()?.userName| titlecase}}
+           Welcome {{accountService.currentUser()?.knownAs}}
           </a>
         <div  *dropdownMenu class="dropdown-menu">
           <a routerLink="/member/edit" class="dropdown-item ">Edit Profile</a>
