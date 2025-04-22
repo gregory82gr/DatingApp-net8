@@ -28,6 +28,10 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
       [HttpGet]
       public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
       {
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            userParams.CurrentUsername = username;
+
             var users = await userRepository.GetMembersAsync(userParams);
 
             Response.AddPagination(users);
