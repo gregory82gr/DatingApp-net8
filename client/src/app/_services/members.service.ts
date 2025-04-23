@@ -21,7 +21,7 @@ export class MembersService {
   getMembers(userParams: UserParams) {
     const response= this.memberCache.get(Object.values(userParams).join('-'));
     if (response) return this.setPaginatedResponse(response);
-    
+
     let params = this.setPaginationHeaders(
       userParams.pageNumber,
       userParams.pageSize
@@ -61,8 +61,11 @@ export class MembersService {
   }
 
   getMember(username: string) {
-    // const member = this.members().find((x) => x.userName === username);
-    // if (member !== undefined) return of(member);
+    const member:Member=[...this.memberCache.values()]
+    .reduce((arr, elem) => arr.concat(elem.body), [])
+    .find((member: Member) => member.userName === username);
+
+    if (member) return of(member);
 
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
