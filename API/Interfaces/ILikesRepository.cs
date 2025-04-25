@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using API.Entities;
 using AutoMapper;
 using API.DTOs;
+using API.Helpers;
 
 namespace API.Interfaces
 {
@@ -10,7 +11,7 @@ namespace API.Interfaces
     {
         // Define method signatures here
         Task<UserLike?> GetUserLike(int sourceUserId, int targetUserId);
-        Task<IEnumerable<MemberDto>> GetUserLikes(string predicate,int userId);
+        Task<PagedList<MemberDto>> GetUserLikes(LikesParams likesParams);
         Task<IEnumerable<int>> GetCurrentUserLikesIds(int currentUserId);
         void AddLike(UserLike userLike);
         void DeleteLike(UserLike userLike);
