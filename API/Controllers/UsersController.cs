@@ -28,7 +28,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
       [HttpGet]
       public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
       {
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var username = User.GetUserName();
             
             userParams.CurrentUsername = username;
 
@@ -54,7 +54,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
       public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
       {
 
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var username =  User.GetUserName();
 
             if (username == null) return BadRequest("No usernamer found in token");
 
@@ -73,7 +73,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
       public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
       {
 
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var username =  User.GetUserName();
 
             if (username == null) return BadRequest("No usernamer found in token");
 
@@ -112,7 +112,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
       [HttpPut("set-main-photo/{photoId:int}")]
       public async Task<ActionResult> SetMainPhoto(int photoId)
       {
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var username =  User.GetUserName();
 
             if (username == null) return BadRequest("No usernamer found in token");
 
@@ -138,7 +138,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
       [HttpDelete("delete-photo/{photoId:int}")]
       public async Task<ActionResult> DeletePhoto(int photoId)
       {
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var username =  User.GetUserName();
 
             if (username == null) return BadRequest("No usernamer found in token");
 
