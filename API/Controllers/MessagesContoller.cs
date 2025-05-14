@@ -12,6 +12,7 @@ using API.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
+using API.Extensions;
 
 
 namespace API.Controllers
@@ -26,7 +27,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<MessageDto>> CreateMessage(CreateMessageDto createMessageDto)
         {
-            var username = User.GetUsername();
+            var username = User.GetUserName();
             if (username == createMessageDto.RecipientUsername.ToLower())
                 return BadRequest("You cannot send messages to yourself");
 
