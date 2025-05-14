@@ -10,9 +10,9 @@ using AutoMapper;
 using API.Sevices;
 using API.Data;
 using System.Linq;
-using System.Security.Claims;
 using System.Text.Json;
-using API.Extensions;
+
+
 
 
 namespace API.Controllers
@@ -52,11 +52,19 @@ namespace API.Controllers
                 return Ok(mapper.Map<MessageDto>(message));
             }
 
-            
-
             return BadRequest("Failed to send message");
         }
 
        
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessagesForUser([FromQuery] MessageParams messageParams)
+        {
+            messageParams.Username = User.GetUserName();
+            var messages = await messageRepository.GetMessagesForUser(messageParams);
+
+            Response.AddPagination(messages);
+
+            return messages;
+        }
     }
 }

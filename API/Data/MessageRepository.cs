@@ -24,10 +24,24 @@ public class MessageRepository(DataContext context, IMapper mapper) : IMessageRe
         return await context.Messages.FindAsync(id);
     }
 
-    public async Task<PagedList<MessageDto>> GetMessagesForUser()
+    public async Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams)
     {
-        throw new NotImplementedException("GetMessagesForUser method is not implemented yet.");
-    }	
+        var query = context.Messages
+            .OrderByDescending(m => m.MessageSent)
+            .AsQueryable();
+
+        query = messageParams.Container switch
+        {
+            "Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username ),
+            "Outbox" => query.Where(u => u.SenderUsername == messageParams.Username ),
+            _ => query.Where(u => u.RecipientUsername == messageParams.Username && u.DateRead == null)
+        };
+
+        var messages = query.ProjectTo<MessageDto>(mapper.ConfigurationProvider).AsNoTracking();
+
+        return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
+    }
+   
 
     public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername)
     {
