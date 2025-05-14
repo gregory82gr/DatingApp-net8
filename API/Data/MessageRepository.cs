@@ -3,6 +3,7 @@ using API.Entities;
 using API.Helpers;
 using AutoMapper;
 using API.Interfaces;
+using AutoMapper.QueryableExtensions;
 
 
 namespace API.Data;
@@ -37,7 +38,7 @@ public class MessageRepository(DataContext context, IMapper mapper) : IMessageRe
             _ => query.Where(u => u.RecipientUsername == messageParams.Username && u.DateRead == null)
         };
 
-        var messages = query.ProjectTo<MessageDto>(mapper.ConfigurationProvider).AsNoTracking();
+        var messages = query.ProjectTo<MessageDto>(mapper.ConfigurationProvider);
 
         return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
     }
