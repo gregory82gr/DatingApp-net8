@@ -4,6 +4,10 @@ using API.Helpers;
 using AutoMapper;
 using API.Interfaces;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 
 namespace API.Data;
@@ -46,7 +50,25 @@ public class MessageRepository(DataContext context, IMapper mapper) : IMessageRe
 
     public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername)
     {
-        throw new NotImplementedException("GetMessageThread method is not implemented yet.");
+        var messages = await context.Messages
+            .Include(m => m.Sender).ThenInclude(u => u.Photos)
+            .Include(m => m.Recipient).ThenInclude(u => u.Photos)
+            .Where(m => m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername ||
+                        m.RecipientUsername == recipientUsername && m.SenderUsername == currentUsername)
+            .OrderBy(m => m.MessageSent)
+            .ToListAsync();
+        var unreadMessages = messages.Where(m => m.DateRead == null && 
+                    m.RecipientUsername == currentUsername).ToList();
+        if (unreadMessages.Any())
+        {
+            foreach (var message in unreadMessages)
+            {
+                message.DateRead = DateTime.UtcNow;
+            }
+            await context.SaveChangesAsync();
+        }
+        return mapper.Map<IEnumerable<MessageDto>>(messages);
+            
     }
 
     public async Task<bool> SaveAllAsync()

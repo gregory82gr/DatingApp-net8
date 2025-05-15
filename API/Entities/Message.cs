@@ -9,7 +9,7 @@ namespace API.Entities{
         public required string RecipientUsername { get; set; } 
         public required string Content { get; set; } = null!;
         public DateTime? DateRead { get; set; } 
-        public DateTime MessageSent { get; set; } = DateTime.Now;
+        public DateTime MessageSent { get; set; } = DateTime.UtcNow;
         public bool SenderDeleted { get; set; }
         public bool RecipientDeleted { get; set; }
 

@@ -12,9 +12,6 @@ using API.Data;
 using System.Linq;
 using System.Text.Json;
 
-
-
-
 namespace API.Controllers
 {
     public class MessagesController(
@@ -65,6 +62,12 @@ namespace API.Controllers
             Response.AddPagination(messages);
 
             return messages;
+        }
+        [HttpGet("thread/{username}")]
+        public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username)
+        {
+            var currentUsername = User.GetUserName();
+            return Ok(await messageRepository.GetMessageThread(currentUsername, username));
         }
     }
 }
