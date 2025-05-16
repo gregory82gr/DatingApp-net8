@@ -17,11 +17,11 @@ import { MessageService } from '../../_services/message.service';
   styleUrl: './member-detail.component.css'
 })
 export class MemberDetailComponent implements OnInit {
-  @ViewChild('memberTabs') memberTabs?: TabsetComponent;
+  @ViewChild('memberTabs',{static:true}) memberTabs?: TabsetComponent;
  private memberService=inject(MembersService);
  private messageService=inject(MessageService);
  private route=inject(ActivatedRoute);
- member?: Member ;
+ member: Member ={} as Member;
  images:GalleryItem[]=[];
  activeTab?: TabDirective;
  messages:Message[] = [];
@@ -30,7 +30,12 @@ export class MemberDetailComponent implements OnInit {
 
  constructor(private gallery: Gallery) {}
   ngOnInit(): void {
-    this.loadMember();
+    this.route.data.subscribe(data => {
+      this.member = data['member'];
+      this.member && this.member.photos.map(p=>{
+        this.images.push(new ImageItem({src:p.url, thumb:p.url}))
+      })
+    });
     this.route.queryParams.subscribe(params => {
       params['tab'] && this.selectTab( params['tab']);
     });
@@ -58,17 +63,18 @@ export class MemberDetailComponent implements OnInit {
       });
     }
   }
-  loadMember() {
-    const username = this.route.snapshot.paramMap.get('username');
-    if (username) {
-      this.memberService.getMember(username).subscribe(member => {
-        this.member = member;
-        member.photos.map(p=>{
-          this.images.push(new ImageItem({src:p.url, thumb:p.url}))
-        })
-      }, error => {
-        console.error(error);
-      });
-    }
-  }
+
+  // loadMember() {
+  //   const username = this.route.snapshot.paramMap.get('username');
+  //   if (username) {
+  //     this.memberService.getMember(username).subscribe(member => {
+  //       this.member = member;
+  //       member.photos.map(p=>{
+  //         this.images.push(new ImageItem({src:p.url, thumb:p.url}))
+  //       })
+  //     }, error => {
+  //       console.error(error);
+  //     });
+  //   }
+  // }
 }
