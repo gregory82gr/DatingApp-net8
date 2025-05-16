@@ -31,7 +31,18 @@ export class MemberDetailComponent implements OnInit {
  constructor(private gallery: Gallery) {}
   ngOnInit(): void {
     this.loadMember();
-    console.log('Gallery images:', this.images);
+    this.route.queryParams.subscribe(params => {
+      params['tab'] && this.selectTab( params['tab']);
+    });
+  }
+
+  selectTab(heading: string) {
+    if (this.memberTabs) {
+      const messageTab = this.memberTabs.tabs.find(tab => tab.heading === heading);
+      if (messageTab) {
+        messageTab.active = true;
+      }
+    }
   }
 
   onTabActivated(data: TabDirective) {
