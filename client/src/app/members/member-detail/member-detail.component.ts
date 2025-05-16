@@ -1,12 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MembersService } from '../../_services/members.service';
 import { ActivatedRoute } from '@angular/router';
 import { Member } from '../../_models/member';
-import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TabDirective, TabsetComponent, TabsModule } from 'ngx-bootstrap/tabs';
 import {  GalleryItem, GalleryModule, ImageItem ,Gallery} from 'ng-gallery';
 import { TimeagoModule } from 'ngx-timeago';
 import { DatePipe } from '@angular/common';
 import { MemberMessagesComponent } from '../member-messages/member-messages.component';
+import { Message } from '../../_models/message';
+import { MessageService } from '../../_services/message.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -15,22 +17,36 @@ import { MemberMessagesComponent } from '../member-messages/member-messages.comp
   styleUrl: './member-detail.component.css'
 })
 export class MemberDetailComponent implements OnInit {
+  @ViewChild('memberTabs') memberTabs?: TabsetComponent;
  private memberService=inject(MembersService);
+ private messageService=inject(MessageService);
  private route=inject(ActivatedRoute);
  member?: Member ;
  images:GalleryItem[]=[];
+ activeTab?: TabDirective;
+ messages:Message[] = [];
+
+
 
  constructor(private gallery: Gallery) {}
   ngOnInit(): void {
     this.loadMember();
     console.log('Gallery images:', this.images);
-
   }
 
-
-
-
-
+  onTabActivated(data: TabDirective) {
+    this.activeTab = data;
+    if (this.activeTab.heading === 'Messages' && this.member && this.messages.length === 0) {
+      this.messageService.getMessageThread(this.member.userName).subscribe({
+        next: (messages) => {
+          this.messages = messages;
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
+    }
+  }
   loadMember() {
     const username = this.route.snapshot.paramMap.get('username');
     if (username) {

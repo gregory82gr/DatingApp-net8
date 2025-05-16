@@ -11,22 +11,22 @@ import { TimeagoModule } from 'ngx-timeago';
 })
 export class MemberMessagesComponent  implements OnInit {
   ngOnInit(): void {
-    this.loadMessages();
+    //this.loadMessages();
   }
   private messageService=inject(MessageService);
   username=input.required<string>();
-  messages: Message[] = [];
+  messages= input.required<Message[]>() ;
 
-  loadMessages() {
+  // loadMessages() {
 
-    this.messageService.getMessageThread(this.username()).subscribe({
-      next: (messages) => {
-        this.messages = messages;
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
-  }
+  //   this.messageService.getMessageThread(this.username()).subscribe({
+  //     next: (messages) => {
+  //       this.messages = messages;
+  //     },
+  //     error: (error) => {
+  //       console.error(error);
+  //     }
+  //   });
+  // }
 
 }
