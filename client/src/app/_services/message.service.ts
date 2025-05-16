@@ -23,6 +23,9 @@ export class MessageService {
       .subscribe({
         next:response=> setPaginatedResponse(response, this.paginatedResult)
       })
+  }
 
+  getMessageThread(username: string) {
+    return this.http.get<Message[]>(this.baseUrl + 'messages/thread/' + username);
   }
 }
