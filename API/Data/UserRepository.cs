@@ -32,7 +32,7 @@ public class UserRepository(DataContext _context,IMapper mapper) : IUserReposito
     {
         return await _context.Users.
              Include(x => x.Photos).
-            SingleOrDefaultAsync(x => x.UserName == username.ToLower());
+            SingleOrDefaultAsync(x => x.NormalizedUserName == username.ToUpper());
     }
 
     public async Task<IEnumerable<AppUser>> GetUsersAsync()
