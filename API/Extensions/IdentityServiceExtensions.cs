@@ -54,9 +54,13 @@ namespace API.Extensions
                         Console.WriteLine("Token validated successfully.");
                         return Task.CompletedTask;
                     }
-            };
-        });
+                };
+            });
 
+            services.AddAuthorizationBuilder()
+                .AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"))
+                .AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Moderator", "Admin"));
+                
             return services;
         }
     }
