@@ -6,7 +6,7 @@
         class="btn btn-primary"
         btnRadio="Unread"
         [(ngModel)]="container"
-        (click)="(loadMessages)"
+        (click)="loadMessages()"
       >
         Unread
       </button>
@@ -15,7 +15,7 @@
         class="btn btn-primary"
         btnRadio="Inbox"
         [(ngModel)]="container"
-        (click)="(loadMessages)"
+        (click)="loadMessages()"
       >
         Inbox
       </button>
@@ -24,7 +24,7 @@
         class="btn btn-primary"
         btnRadio="Outbox"
         [(ngModel)]="container"
-        (click)="(loadMessages)"
+        (click)="loadMessages()"
       >
         Outbox
       </button>
