@@ -28,7 +28,6 @@ export const routes: Routes = [
         canDeactivate:[preventUnsavedChangesGuard]},
       {path:'lists',component:ListsComponent},
       {path:'messages',component:MessagesComponent},
-      {path:'admin',component:AdminPanelComponent},
       {path:'admin',component:AdminPanelComponent,
         canActivate:[adminGuard]},
 
