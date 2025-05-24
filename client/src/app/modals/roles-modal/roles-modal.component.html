@@ -16,11 +16,11 @@
       (change)="updateChecked(role)"
       [disabled]="username==='admin' && role === 'Admin'"
     />
-    <label class="form-check-label" [for]="role">{{ role }}</label>
+    <label>{{ role }}</label>
   </div>
 
  }
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Close</button>
+  <button [disabled]="selectedRoles.length === 0" type="button" class="btn btn-success" (click)="onSelectRoles()">Submit</button>
 </div>
