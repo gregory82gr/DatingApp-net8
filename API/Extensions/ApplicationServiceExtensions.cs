@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using API.Helpers;
 using Microsoft.Extensions.Configuration;
 
+
 namespace API.Extensions
 {
     public static class ApplicationServiceExtensions
@@ -29,6 +30,7 @@ namespace API.Extensions
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<LogUserActivity>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddSignalR();
             
             
 

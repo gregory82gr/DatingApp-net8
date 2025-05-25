@@ -9,6 +9,7 @@ using API.Extensions;
 using API;
 using Microsoft.AspNetCore.Identity;
 using API.Entities;
+using API.SignalR;	
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,11 +31,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200","https://localhost:4200"));
+app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().AllowCredentials().
+WithOrigins("http://localhost:4200","https://localhost:4200"));
 
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<PresenceHub>("hubs/presence");
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
